@@ -1,14 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 export const useFetchData = (baseURL, endpoint) => {
   return useQuery({
-    queryKey: ["data",baseURL,endpoint],
+    queryKey: ["fetchData"],
     queryFn: async () => {
       if (!baseURL || !endpoint)
         throw new Error("No baseURL or endpoint provided");
-      const res = await fetch(`${baseURL}${endpoint}`);
+      const res = await axios(`${baseURL}${endpoint}`);
+      const data = await res.json();
+      console.log(data);
       if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
+      return data;
     },
+    staleTime: 10000, // 10 seconds
   });
 };
